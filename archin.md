@@ -1,14 +1,19 @@
 Default keyboard layout en_US
 
 Verify UEFI
+```
 # ls /sys/firmware/efi/efivars
+```
 if not directory no UEFI
 
 Check internet concection
+```
 # ping google.com
-
+```
 Update system clock
+```
 # timedatectl set-ntp true
+```
 
 Partition the disk
 # fdisk /dev/sdX
@@ -25,6 +30,7 @@ by defualt it is 'Linux filesystem' to change EFI partition to 'EFI system'
 w : write table to disk and exit
 
 Mount Partitions
+```
 format EFI partition--> mkfs.fat -F32 /dev/sdaX  
 format swap and root --> mkfs.ext4 /dev/sdaX
 swap stuff:
@@ -32,14 +38,17 @@ swap stuff:
 	swapon /dev/sdXX	
 mount /root --> mount /dev/sdaX /mnt
 mount /boot/efi --→ mount /dev/sdaX /mnt/boot/efi
-
+```
 Install essential packages
+```
 # pacstrap /mnt base base-devel vim openssh 
+```
 
 Configuration
 Fstab
+```
 # genfstab -U /mnt >> /mnt/etc/fstab
-
+```
 	THINKPADT450
 	- If you have an SSD installed, either add the discard option in the fstab for all partitions,
 
@@ -49,53 +58,75 @@ Fstab
 
 	or use fstrim.
 
-	sudo systemctl enable fstrim.timer;
+	sudo systemctl enable fstrim.timer
 	sudo systemctl start fstrim.timer
 
 Chroot into the system
+```
 # arch-chroot /mnt
-~ # pacman -S networkmanager
-~ # systemctl enable NetworkManager
+```
+
+```
+# pacman -S networkmanager
+# systemctl enable NetworkManager
+```
 
 Time Zone
+```
 # ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
-
+```
 Generate /etc/adhtime
+```
 # hwclock --systohc
+```
 
 Locale
+```
 # vim /etc/locale.gen
+```
 Uncomment the one you want
 save
+```
 # locale-gen
+```
+```
 # vim /etc/locale.conf
 LANG=en_US.UTF-8
+```
 
 Hostname
+```
 # vim /etc/hostname
 whateverhostnameyouwanttoputinhere
-
+```
+```
 #vim /etc/hosts
 #<ip-address>   <hostname.domain.org>   <hostname>
 127.0.0.1       localhost.localdomain   localhost       $$hostname$$
 ::1     localhost.localdomain   localhost     $$hostname$$
-
+```
 Generate Root password
+```
 # passwd 
+```
 
 Bootloader
+```
 # pacman -S grub efibootmgr dosfѕtools
 # grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
 # grub-mkconfig -o /boot/grub/grub.cfg
-#
+```
+
 NOEFI
+```
 # grub-install --target=i386-pc /dev/sdX
 # grub-mkconfig -o /boot/grub/grub.cfg
-
-
+```
+```
 #exit
 #umount -R/mnt
-~~reboot~~
+```
+~reboot~
 
 ----------
 Add users
