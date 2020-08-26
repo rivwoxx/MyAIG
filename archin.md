@@ -1,47 +1,84 @@
 Default keyboard layout en_US
 
-Verify UEFI
+### Verify UEFI
 ```
 # ls /sys/firmware/efi/efivars
 ```
-if not directory no UEFI
-
-Check internet concection
+#####  No directory, No UEFI
+#
+### Check internet concection
 ```
 # ping google.com
 ```
-Update system clock
+
+### Update system clock
 ```
 # timedatectl set-ntp true
 ```
 
-Partition the disk
+## Partition the disk
+### List disks 
+```
+# lsblk
+```
+### Partition Table
+
+Type | Disk Partition | Mount | Flag | Size |
+---- | ---------- | ----- | ---- | ---- |	
+EFI  | /dev/sdX1  |	/mnt/boot/efi | EFI | 512MB
+SWAP | /dev/sdX2  | /mnt/[SWAP] | SWAP | xGB
+Root | /dev/sdX3  | /mnt/[root]	| Linux x86_64 | XGB
+
+#
+### fdisk
+
+```
 # fdisk /dev/sdX
+```
+```
 > fdisk
-g to create a new GPT
+
+- g to create a new GPT
 <<delete exіsting partition if they exists>>
-1st 512MB(EFI)
-by defualt it is 'Linux filesystem' to change EFI partition to 'EFI system' 
-	t  :change a partition type
-	select partition 
-	partition type: 1 for EFI
+
+- n Create new partition
+
+1st 512MB(EFI) 
 2nd 5GB(swap)
 3rd whatever is left(root)
+By defualt all partitions are 'Linux filesystem' change each partition to correspondan.
+
+- t  :change a partition type select partition partition type: 1 for EFI
+	-L :to list flags
 w : write table to disk and exit
 
-Mount Partitions
+```	
+
+## Mount Partitions
+### Format partitions
+
+Format EFI partition 
 ```
-format EFI partition--> mkfs.fat -F32 /dev/sdaX  
-format swap and root --> mkfs.ext4 /dev/sdaX
-swap stuff:
-	mkswap /dev/sdXX
-	swapon /dev/sdXX	
+# mkfs.fat -F32 /dev/sdaX  
+```
+Format root 
+```
+# mkfs.ext4 /dev/sdaX
+````
+Swap:
+```
+# mkswap /dev/sdXX
+# swapon /dev/sdXX	
+```
+### Mounting Partitions
+```
 mount /root --> mount /dev/sdaX /mnt
-mount /boot/efi --→ mount /dev/sdaX /mnt/boot/efi
+mkdir /mnt/boot/efi
+mount /boot/efi --> mount /dev/sdaX /mnt/boot/efi
 ```
 Install essential packages
 ```
-# pacstrap /mnt base base-devel vim openssh 
+# pacstrap /mnt base base-devel linux-lts linux-firmaware vim 
 ```
 
 Configuration
@@ -111,6 +148,7 @@ Generate Root password
 ```
 
 Bootloader
+EFI
 ```
 # pacman -S grub efibootmgr dosfѕtools
 # grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
@@ -130,10 +168,13 @@ NOEFI
 
 ----------
 Add users
+```
 # useradd -m -g wheel $user
-#
-# passwd user
+# passwd $user
+```
+```
 # sudo vim /etc/sudoers
+```
 uncomment this stuff:
 	## User privilege specification
 	##
@@ -142,21 +183,29 @@ uncomment this stuff:
 	## Uncomment to allow members of group wheel to execute any command
  		%wheel ALL=(ALL) ALL
 
-DE
+## Desktop Environment
+
+KDE
+```
 xorg and other necessary stuff
 # pacman -S xorg xorg-server xorg-xinit pulseaudio pulseaudio-alsa alsa-utils mesa kde sddm noto-fonts
 # vim /.xinitrc
 	 exec startplasma-x11
 # systemctl enable sddm.service
+```
 
-gnome
-# pacman -S xort xort-server xorg-xinit gnome mesa vulkan-intel noto-fonts neofetch zsh zsh-completions
+Gnome
+```
+# pacman -S xort xort-server xorg-xinit gnome noto-fonts neofetch zsh zsh-completions man man-pages mesa vulkan-intel mesa-vdpau glu intel-ucode
+```
+```
 # sudo systemctl enable gdm.service
+```
 PowerManagement
+```
 sudo pacman -S tlp
 sudo systemctl enable tlp.service
-sudo systemctl start tlp.service
-
+```
 
 
 
