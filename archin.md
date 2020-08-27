@@ -6,7 +6,7 @@ Default keyboard layout en_US
 ```
 #####  No directory, No UEFI
 #
-### Check internet concection
+### Check internet connection
 ```
 # ping google.com
 ```
@@ -78,7 +78,7 @@ mount /boot/efi --> mount /dev/sdaX /mnt/boot/efi
 ```
 Install essential packages
 ```
-# pacstrap /mnt base base-devel linux-lts linux-firmaware vim 
+# pacstrap /mnt base base-devel linux-lts linux-firmaware vim
 ```
 
 Configuration
@@ -102,6 +102,8 @@ Chroot into the system
 ```
 # arch-chroot /mnt
 ```
+Enable Network Manager
+>Can do it later, I always forget to do it later. 
 
 ```
 # pacman -S networkmanager
@@ -112,7 +114,7 @@ Time Zone
 ```
 # ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
 ```
-Generate /etc/adhtime
+Generate /etc/adjtime
 ```
 # hwclock --systohc
 ```
@@ -121,8 +123,7 @@ Locale
 ```
 # vim /etc/locale.gen
 ```
-Uncomment the one you want
-save
+Uncomment the one you want & save
 ```
 # locale-gen
 ```
@@ -134,28 +135,30 @@ LANG=en_US.UTF-8
 Hostname
 ```
 # vim /etc/hostname
+
 whateverhostnameyouwanttoputinhere
 ```
 ```
-#vim /etc/hosts
-#<ip-address>   <hostname.domain.org>   <hostname>
-127.0.0.1       localhost.localdomain   localhost       $$hostname$$
-::1     localhost.localdomain   localhost     $$hostname$$
+# vim /etc/hosts
+<ip-address>	<hostname.domain.org>	<hostname>
+127.0.0.1		localhost.localdomain   localhost	$$hostname$$
+::1     		localhost.localdomain   localhost	$$hostname$$
 ```
+
 Generate Root password
 ```
 # passwd 
 ```
 
-Bootloader
-EFI
+## Bootloader
+### EFI
 ```
-# pacman -S grub efibootmgr dosfѕtools
+# pacman -S grub efibootmgr
 # grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
 # grub-mkconfig -o /boot/grub/grub.cfg
 ```
 
-NOEFI
+### NOEFI
 ```
 # grub-install --target=i386-pc /dev/sdX
 # grub-mkconfig -o /boot/grub/grub.cfg
@@ -166,14 +169,18 @@ NOEFI
 ```
 ~reboot~
 
+>If everything was done correctly you should go straing into your system, then you can continue.
 ----------
-Add users
+
+## Add users
 ```
 # useradd -m -g wheel $user
 # passwd $user
 ```
+## Add users to sudo
 ```
 # sudo vim /etc/sudoers
+```
 ```
 uncomment this stuff:
 	## User privilege specification
@@ -182,6 +189,7 @@ uncomment this stuff:
 
 	## Uncomment to allow members of group wheel to execute any command
  		%wheel ALL=(ALL) ALL
+```
 
 ## Desktop Environment
 
@@ -194,9 +202,9 @@ xorg and other necessary stuff
 # systemctl enable sddm.service
 ```
 
-Gnome
+Gnome + My usual bullsh
 ```
-# pacman -S xort xort-server xorg-xinit gnome noto-fonts neofetch zsh zsh-completions man man-pages mesa vulkan-intel mesa-vdpau glu intel-ucode
+# pacman -S xort xort-server xorg-xinit gnome noto-fonts neofetch zsh zsh-completions man man-pages mesa vulkan-intel mesa-vdpau glu intel-ucode openssh neofetch acpi firefox 
 ```
 ```
 # sudo systemctl enable gdm.service
@@ -206,6 +214,20 @@ PowerManagement
 sudo pacman -S tlp
 sudo systemctl enable tlp.service
 ```
+
+Grub Screen
+```
+# vim /etc/default/grub
+
+Change GRUB_TIME=X
+```
+Generate new grub-config
+```
+# grub-mkconfig -o /boot/grub/grub.cfg
+```
+
+
+
 
 
 
