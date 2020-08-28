@@ -59,7 +59,7 @@ w : write table to disk and exit
 
 Format EFI partition 
 ```
-# mkfs.fat -F32 /dev/sdaX  
+# mkfs.vfat /dev/sdaX  
 ```
 Format root 
 ```
@@ -153,7 +153,7 @@ Generate Root password
 ## Bootloader
 ### EFI
 ```
-# pacman -S grub efibootmgr
+# pacman -S grub efibootmgr intel-ucode
 # grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
 # grub-mkconfig -o /boot/grub/grub.cfg
 ```
@@ -171,13 +171,14 @@ Generate Root password
 
 >If everything was done correctly you should go straing into your system, then you can continue.
 ----------
+## POST-INSTALL
 
-## Add users
+ Add users
 ```
 # useradd -m -g wheel $user
 # passwd $user
 ```
-## Add users to sudo
+Add users to sudo
 ```
 # sudo vim /etc/sudoers
 ```
@@ -193,6 +194,14 @@ uncomment this stuff:
 
 ## Desktop Environment
 
+Gnome + My usual bullsh
+
+```
+# pacman -S xorg xorg-server xorg-xinit gnome noto-fonts neofetch zsh zsh-completions man man-pages mesa vulkan-intel mesa-vdpau glu openssh acpi
+
+# sudo systemctl enable gdm.service
+```
+
 KDE
 ```
 xorg and other necessary stuff
@@ -202,20 +211,33 @@ xorg and other necessary stuff
 # systemctl enable sddm.service
 ```
 
-Gnome + My usual bullsh
-```
-# pacman -S xort xort-server xorg-xinit gnome noto-fonts neofetch zsh zsh-completions man man-pages mesa vulkan-intel mesa-vdpau glu intel-ucode openssh neofetch acpi firefox 
-```
-```
-# sudo systemctl enable gdm.service
-```
-PowerManagement
+### PowerManagement
 ```
 sudo pacman -S tlp
 sudo systemctl enable tlp.service
 ```
 
-Grub Screen
+### My Usual BullSH
+```
+# pacman -S firefox terminator git htop gthumb code gvim gthumb keepassxc gnome-tweaks 
+```
+
+### YAY
+```
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+```
+Installing Oh-My-Zsh
+```
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+Copy some conf.
+```
+git clone https://github.com/rivwoxx/dotfiles.git
+```
+### Grub Screen
 ```
 # vim /etc/default/grub
 
