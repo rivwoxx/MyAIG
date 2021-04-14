@@ -141,8 +141,10 @@ whateverhostnameyouwanttoputinhere
 ```
 # vim /etc/hosts
 <ip-address>	<hostname.domain.org>	<hostname>
-127.0.0.1		localhost.localdomain   localhost	$$hostname$$
-::1     		localhost.localdomain   localhost	$$hostname$$
+127.0.0.1		localhost
+::1				localhost
+127.0.1.1 		hostname.localdomain	hostname
+
 ```
 
 Generate Root password
@@ -153,7 +155,8 @@ Generate Root password
 ## Bootloader
 ### EFI
 ```
-# pacman -S grub efibootmgr intel-ucode
+# pacman -S grub efibootmgr intel-ucode os-prober
+"os-prover if installing alongside MSW10"
 # grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=GRUB
 # grub-mkconfig -o /boot/grub/grub.cfg
 ```
@@ -175,7 +178,7 @@ Generate Root password
 
  Add users
 ```
-# useradd -m -g wheel $user
+# useradd -m -g wheel,audio,video $user
 # passwd $user
 ```
 Add users to sudo
@@ -197,18 +200,9 @@ uncomment this stuff:
 Gnome + My usual bullsh
 
 ```
-# pacman -S xorg xorg-server xorg-xinit gnome noto-fonts neofetch zsh zsh-completions man man-pages mesa vulkan-intel mesa-vdpau glu openssh acpi
+# pacman -S xorg xorg-server xorg-xinit gnome noto-fonts zsh zsh-completions man man-pages mesa vulkan-intel mesa-vdpau glu openssh acpi
 
 # sudo systemctl enable gdm.service
-```
-
-KDE
-```
-xorg and other necessary stuff
-# pacman -S xorg xorg-server xorg-xinit pulseaudio pulseaudio-alsa alsa-utils mesa kde sddm noto-fonts
-# vim /.xinitrc
-	 exec startplasma-x11
-# systemctl enable sddm.service
 ```
 
 ### PowerManagement
@@ -219,7 +213,7 @@ sudo systemctl enable tlp.service
 
 ### My Usual BullSH
 ```
-# pacman -S firefox terminator git htop gthumb code gvim gthumb keepassxc gnome-tweaks 
+# pacman -S git htop gthumb code gvim gthumb keepassxc gnome-tweaks neofetch obs-studio audacity 
 ```
 
 ### YAY
@@ -237,6 +231,22 @@ Copy some conf.
 ```
 git clone https://github.com/rivwoxx/dotfiles.git
 ```
+### Mouse Configuration
+```
+git clone https://github.com/smasty/g203-led.git
+cd g203-led
+virtualenv ./env
+env/bin/pip install -r requirements.txt
+sudo ./g203-led.py solid 34E5EB
+
+```
+### Wayland off
+#### Wayland is ok but does not work propertly with some apps I use so I use Xorg.
+```
+Open /etc/gdm/custom.conf and uncomment line
+
+WaylandEnable=false
+```
 ### Grub Screen
 ```
 # vim /etc/default/grub
@@ -247,12 +257,3 @@ Generate new grub-config
 ```
 # grub-mkconfig -o /boot/grub/grub.cfg
 ```
-
-
-
-
-
-
-
-
-
