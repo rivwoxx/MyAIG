@@ -254,6 +254,10 @@ WaylandEnable=false
 [multilib]
 Include = /etc/pacman.d/mirrorlist
 ```
+### Controller
+```
+yay -Syu libusb jstest usb_modeswitch 
+```
 ### Grub Screen
 ```
 # vim /etc/default/grub
