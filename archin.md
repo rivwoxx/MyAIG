@@ -247,6 +247,13 @@ Open /etc/gdm/custom.conf and uncomment line
 
 WaylandEnable=false
 ```
+### Enable multilib
+```
+# vim /etc/pacman.conf
+
+[multilib]
+Include = /etc/pacman.d/mirrorlist
+```
 ### Grub Screen
 ```
 # vim /etc/default/grub
